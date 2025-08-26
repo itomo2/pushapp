@@ -71,14 +71,14 @@ class _CalendarState extends State<Calendar> { // Calendar画面の状態管理�
               ),
             ),
             const SizedBox(height: 20), // 余白
-            ElevatedButton( // ボタンウィジェット
+            OutlinedButton( // ボタンウィジェット
               onPressed: () { // ボタン押下時の処理
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const PushUpCounterScreen()), // PushUpCounterScreenへ遷移
                 );
               },
-              child: const Text('Start',style: TextStyle(fontSize: 50.0,fontWeight: FontWeight.bold),), // ボタンのラベル
+              child: const Text('Start',style: TextStyle(fontSize: 50.0,),), // ボタンのラベル
             ),
           ],
         )
