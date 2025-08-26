@@ -6,32 +6,37 @@ void main() {
   runApp(const PushUpApp()); // アプリのエントリーポイント。PushUpAppウィジェットを起動
 }
 
-class PushUpApp extends StatelessWidget { // アプリ全体のウィジェット（Stateless: 状態を持たない）
+class PushUpApp extends StatelessWidget {
+  // アプリ全体のウィジェット（Stateless: 状態を持たない）
   const PushUpApp({super.key}); // コンストラクタ（keyはウィジェットの識別用）
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp( // マテリアルデザインのアプリを構築
+    return const MaterialApp(
+      // マテリアルデザインのアプリを構築
       title: '腕立てカウンター', // アプリのタイトル
       home: Calendar(), // メイン画面としてCalendarウィジェットを表示
     );
   }
 }
 
-class Calendar extends StatefulWidget { // 状態を持つ画面ウィジェット
+class Calendar extends StatefulWidget {
+  // 状態を持つ画面ウィジェット
   const Calendar({super.key}); // コンストラクタ
 
   @override
   State<Calendar> createState() => _CalendarState(); // 状態管理クラスを生成
 }
 
-class _CalendarState extends State<Calendar> { // Calendar画面の状態管理クラス
+class _CalendarState extends State<Calendar> {
+  // Calendar画面の状態管理クラス
   DateTime _focusedDay = DateTime.now(); // 現在フォーカスされている日付
   DateTime? _selectedDay; // 選択された日付（未選択ならnull）
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold( // 画面のレイアウトを定義
+    return Scaffold(
+      // 画面のレイアウトを定義
       appBar: AppBar(
         title: const Text('Calendar App'), // AppBarのタイトル
         backgroundColor: Theme.of(context).colorScheme.primary, // AppBarの背景色
@@ -44,8 +49,10 @@ class _CalendarState extends State<Calendar> { // Calendar画面の状態管理�
               firstDay: DateTime.utc(2000, 1, 1), // カレンダーの開始日
               lastDay: DateTime.utc(2200, 12, 31), // カレンダーの終了日
               focusedDay: _focusedDay, // 現在フォーカスされている日付
-              selectedDayPredicate: (day) => isSameDay(_selectedDay, day), // 選択判定
-              onDaySelected: (selectedDay, focusedDay) { // 日付選択時の処理
+              selectedDayPredicate: (day) =>
+                  isSameDay(_selectedDay, day), // 選択判定
+              onDaySelected: (selectedDay, focusedDay) {
+                // 日付選択時の処理
                 setState(() {
                   _selectedDay = selectedDay; // 選択日を更新
                   _focusedDay = focusedDay; // フォーカス日を更新
@@ -71,30 +78,39 @@ class _CalendarState extends State<Calendar> { // Calendar画面の状態管理�
               ),
             ),
             const SizedBox(height: 20), // 余白
-            ElevatedButton( // ボタンウィジェット
-              onPressed: () { // ボタン押下時の処理
+            ElevatedButton(
+              // ボタンウィジェット
+              onPressed: () {
+                // ボタン押下時の処理
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const PushUpCounterScreen()), // PushUpCounterScreenへ遷移
+                  MaterialPageRoute(
+                    builder: (context) => const PushUpCounterScreen(),
+                  ), // PushUpCounterScreenへ遷移
                 );
               },
-              child: const Text('Start',style: TextStyle(fontSize: 50.0,fontWeight: FontWeight.bold),), // ボタンのラベル
+              child: const Text(
+                'Start',
+                style: TextStyle(fontSize: 50.0, fontWeight: FontWeight.bold),
+              ), // ボタンのラベル
             ),
           ],
-        )
+        ),
       ),
     );
   }
 }
 
-class PushUpCounterScreen extends StatefulWidget { // 状態を持つ画面ウィジェット
+class PushUpCounterScreen extends StatefulWidget {
+  // 状態を持つ画面ウィジェット
   const PushUpCounterScreen({super.key}); // コンストラクタ
 
   @override
   State<PushUpCounterScreen> createState() => _PushUpCounterScreenState(); // 状態管理クラスを生成
 }
 
-class _PushUpCounterScreenState extends State<PushUpCounterScreen> { // 状態管理クラス
+class _PushUpCounterScreenState extends State<PushUpCounterScreen> {
+  // 状態管理クラス
   int _pushUpCount = 0; // 腕立ての回数を保持する変数
   bool _isNear = false; // 近接センサーが近いかどうかを保持
   late Stream<bool> _proximityStream; // 近接センサーの状態を監視するストリーム
@@ -107,15 +123,24 @@ class _PushUpCounterScreenState extends State<PushUpCounterScreen> { // 状態�
 
   void _startListening() {
     // proximity_sensorのStream<int>をboolに変換
-    _proximityStream = ProximitySensor.events.map((event) => event > 0); // センサー値が0より大きければtrue
+    _proximityStream = ProximitySensor.events.map(
+      (event) => event > 0,
+    ); // センサー値が0より大きければtrue
 
-    _proximityStream.listen((isNear) { // センサーの状態変化を監視
-      if (isNear && !_isNear) { // 近づいた瞬間のみカウントアップ（ステップ関数）
+    _proximityStream.listen((isNear) {
+      // センサーの状態変化を監視
+      if (isNear && !_isNear) {
+        // 近づいた瞬間のみカウントアップ（ステップ関数）
         setState(() {
           _pushUpCount++; // 腕立て回数を増やす
         });
-        if (_pushUpCount == 2) { // 2回目で何か処理（例：メッセージ表示）をしたい場合
+        if (_pushUpCount == 2) {
+          // 2回目で何か処理（例：メッセージ表示）をしたい場合
           // ここに処理を書く
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const ResultScreen()),
+          );
         }
       }
       _isNear = isNear; // 状態を更新（過去の状態として残しておく）
@@ -124,10 +149,13 @@ class _PushUpCounterScreenState extends State<PushUpCounterScreen> { // 状態�
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold( // 画面のレイアウトを定義
+    return Scaffold(
+      // 画面のレイアウトを定義
       backgroundColor: Colors.black, // 背景色を黒に設定
-      body: Center( // 中央に配置
-        child: Column( // 縦方向にウィジェットを並べる
+      body: Center(
+        // 中央に配置
+        child: Column(
+          // 縦方向にウィジェットを並べる
           mainAxisAlignment: MainAxisAlignment.center, // 中央揃え
           children: [
             const Text(
@@ -137,13 +165,75 @@ class _PushUpCounterScreenState extends State<PushUpCounterScreen> { // 状態�
             const SizedBox(height: 20), // 余白
             Text(
               '$_pushUpCount', // 腕立て回数を表示
-              style: const TextStyle(fontSize: 80, color: Colors.green), // 文字サイズと色
+              style: const TextStyle(
+                fontSize: 80,
+                color: Colors.green,
+              ), // 文字サイズと色
             ),
             const SizedBox(height: 40), // 余白
             const Text(
               'スマホを地面に置いて、\n胸を近づけるとカウントされます！', // 説明文
               style: TextStyle(fontSize: 18, color: Colors.white60), // 文字サイズと色
               textAlign: TextAlign.center, // 中央揃え
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ResultScreen extends StatefulWidget {
+  // 状態を持つ画面ウィジェット
+  const ResultScreen({super.key}); // コンストラクタ
+
+  @override
+  State<ResultScreen> createState() => _ResultScreenState(); // 状態管理クラスを生成
+}
+
+class _ResultScreenState extends State<ResultScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      // 画面のレイアウトを定義
+      backgroundColor: Colors.black, // 背景色を黒に設定
+      body: Center(
+        // 中央に配置
+        child: Column(
+          // 縦方向にウィジェットを並べる
+          mainAxisAlignment: MainAxisAlignment.center, // 中央揃え
+          children: [
+            const Text(
+              'Result', // タイトル表示
+              style: TextStyle(fontSize: 32, color: Colors.orange), // 文字サイズと色
+            ),
+            const SizedBox(height: 20), // 余白
+            // Text(
+            //   '$_pushUpCount', // 腕立て回数を表示
+            //   style: const TextStyle(
+            //     fontSize: 80,
+            //     color: Colors.green,
+            //   ), // 文字サイズと色
+            // ),
+            //const SizedBox(height: 40), // 余白
+            // const Text(
+            //   'スマホを地面に置いて、\n胸を近づけるとカウントされます！', // 説明文
+            //   style: TextStyle(fontSize: 18, color: Colors.white60), // 文字サイズと色
+            //   textAlign: TextAlign.center, // 中央揃え
+            // ),
+            ElevatedButton(
+              // ボタンウィジェット
+              onPressed: () {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => Calendar()),
+                  (Route<dynamic> route) => false,
+                );
+              },
+              child: const Text(
+                'Main menu',
+                style: TextStyle(fontSize: 50.0, fontWeight: FontWeight.bold),
+              ), // ボタンのラベル
             ),
           ],
         ),
