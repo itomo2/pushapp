@@ -1,7 +1,34 @@
-import 'package:flutter/material.dart'; // FlutterのUI部品を使うためのパッケージをインポート
+import 'package:flutter/material.dart'; //lutterのUI部品を使うためのパッケージをインポート
+import 'package:intl/intl.dart'; // 日付フォーマット用パッケージをインポート
+
 import 'package:proximity_sensor/proximity_sensor.dart'; // 近接センサーを使うためのパッケージをインポート
 import 'package:table_calendar/table_calendar.dart'; // カレンダー表示用パッケージをインポート
 
+class AlertDialogSample extends StatelessWidget {
+  const AlertDialogSample(this.selectedDay);
+  final DateTime selectedDay;
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text("${DateFormat('yyyy.M.d').format(selectedDay)}", textAlign: TextAlign.center, style: TextStyle(fontSize: 25.0,),),
+      content: Icon(Icons.circle),//まるばつくん
+      actions: <Widget>[
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            TextButton( 
+              child: Text('Back'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ]
+        )
+      ],
+    );
+  }
+}
 void main() {
   runApp(const PushUpApp()); // アプリのエントリーポイント。PushUpAppウィジェットを起動
 }
@@ -52,6 +79,12 @@ class _CalendarState extends State<Calendar> {
               selectedDayPredicate: (day) =>
                   isSameDay(_selectedDay, day), // 選択判定
               onDaySelected: (selectedDay, focusedDay) {
+                showDialog<void>(
+                  context: context,
+                  builder: (_) {
+                    return AlertDialogSample(selectedDay);
+                  }
+                );
                 // 日付選択時の処理
                 setState(() {
                   _selectedDay = selectedDay; // 選択日を更新
@@ -78,10 +111,8 @@ class _CalendarState extends State<Calendar> {
               ),
             ),
             const SizedBox(height: 20), // 余白
-            ElevatedButton(
-              // ボタンウィジェット
-              onPressed: () {
-                // ボタン押下時の処理
+            OutlinedButton( // ボタンウィジェット
+              onPressed: () { // ボタン押下時の処理
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -89,10 +120,7 @@ class _CalendarState extends State<Calendar> {
                   ), // PushUpCounterScreenへ遷移
                 );
               },
-              child: const Text(
-                'Start',
-                style: TextStyle(fontSize: 50.0, fontWeight: FontWeight.bold),
-              ), // ボタンのラベル
+              child: const Text('Start',style: TextStyle(fontSize: 50.0,),), // ボタンのラベル
             ),
           ],
         ),
