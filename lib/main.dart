@@ -11,24 +11,94 @@ class AlertDialogSample extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text("${DateFormat('yyyy.M.d').format(selectedDay)}", textAlign: TextAlign.center, style: TextStyle(fontSize: 25.0,),),
-      content: Icon(Icons.circle),//まるばつくん
+      backgroundColor: const Color(0xFFD5FF5F),
+      title: Text(
+        "${DateFormat('  yyyy.M.d').format(selectedDay)}",
+        textAlign: TextAlign.left,
+        style: TextStyle(
+          color: const Color(0xFF14151A) /* 背景 */,
+          fontSize: 32,
+          fontFamily: 'Inter',
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      // content: Icon(Icons.circle),//まるばつくん
       actions: <Widget>[
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            TextButton( 
-              child: Text('Back'),
-              onPressed: () {
-                Navigator.pop(context);
-              },
+        Container(
+          width: 250,
+          height: 200,
+          decoration: ShapeDecoration(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
             ),
-          ]
-        )
+          ),
+          child: Stack(
+            children: [
+              Positioned(
+                left: 0,
+                top: 0,
+                child: Container(
+                  width: 250,
+                  height: 200,
+                  decoration: ShapeDecoration(
+                    color: const Color(0xFFD5FF5F) /* メインテーマ */,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                left: 20,
+                top: 47,
+                child: Text(
+                  '腕立て伏せ：25回\n腹筋：50回',
+                  style: TextStyle(
+                    color: const Color(0xFF14151A) /* 背景 */,
+                    fontSize: 25,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+
+              // Positioned(
+              //   left: 40,
+              //   top: 33,
+              //   child: SizedBox(
+              //     width: 239,
+              //     height: 61,
+              //     child: Text(
+              //       '2025.6.16',
+              //       style: TextStyle(
+              //         color: const Color(0xFF14151A) /* 背景 */,
+              //         fontSize: 32,
+              //         fontFamily: 'Inter',
+              //         fontWeight: FontWeight.w600,
+              //       ),
+              //     ),
+              //   ),
+              // ),
+            ],
+          ),
+        ),
+
+        // Column(
+        //   crossAxisAlignment: CrossAxisAlignment.center,
+        //   children: <Widget>[
+        //     TextButton(
+        //       child: Text('Back'),
+        //       onPressed: () {
+        //         Navigator.pop(context);
+        //       },
+        //     ),
+        //   ]
+        // )
       ],
     );
   }
 }
+
 void main() {
   runApp(const PushUpApp()); // アプリのエントリーポイント。PushUpAppウィジェットを起動
 }
@@ -83,7 +153,7 @@ class _CalendarState extends State<Calendar> {
                   context: context,
                   builder: (_) {
                     return AlertDialogSample(selectedDay);
-                  }
+                  },
                 );
                 // 日付選択時の処理
                 setState(() {
@@ -111,8 +181,10 @@ class _CalendarState extends State<Calendar> {
               ),
             ),
             const SizedBox(height: 20), // 余白
-            OutlinedButton( // ボタンウィジェット
-              onPressed: () { // ボタン押下時の処理
+            OutlinedButton(
+              // ボタンウィジェット
+              onPressed: () {
+                // ボタン押下時の処理
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -120,7 +192,10 @@ class _CalendarState extends State<Calendar> {
                   ), // PushUpCounterScreenへ遷移
                 );
               },
-              child: const Text('Start',style: TextStyle(fontSize: 50.0,),), // ボタンのラベル
+              child: const Text(
+                'Start',
+                style: TextStyle(fontSize: 50.0),
+              ), // ボタンのラベル
             ),
           ],
         ),
