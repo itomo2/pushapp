@@ -7,6 +7,13 @@ import 'package:table_calendar/table_calendar.dart'; // カレンダー表示用
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+class info{
+  String subject;
+  int count;
+
+  info(this.subject, this.count);
+}
+
 class AlertDialogSample extends StatelessWidget {
   const AlertDialogSample(this.selectedDay);
   final DateTime selectedDay;
