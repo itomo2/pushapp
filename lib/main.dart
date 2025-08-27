@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart'; //lutterのUI部品を使うためのパッケージをインポート
+import 'package:flutter/material.dart'; //flutterのUI部品を使うためのパッケージをインポート
 import 'package:intl/intl.dart'; // 日付フォーマット用パッケージをインポート
 
 import 'package:proximity_sensor/proximity_sensor.dart'; // 近接センサーを使うためのパッケージをインポート
@@ -149,20 +149,11 @@ class _PushUpCounterScreenState extends State<PushUpCounterScreen> {
     _startListening(); // 初期化時に近接センサーの監視を開始
   }
 
-  void _startListening() {
-    // proximity_sensorのStream<int>をboolに変換
-    _proximityStream = ProximitySensor.events.map(
-      (event) => event > 0,
-    ); // センサー値が0より大きければtrue
-
-    _proximityStream.listen((isNear) {
-      // センサーの状態変化を監視
-      if (isNear && !_isNear) {
-        // 近づいた瞬間のみカウントアップ（ステップ関数）
-        setState(() {
-          _pushUpCount++; // 腕立て回数を増やす
-        });
-        if (_pushUpCount == 2) {
+  void debugyou() {
+    setState((){
+      _pushUpCount++;
+    });
+    if (_pushUpCount == 2) {
           // 2回目で何か処理（例：メッセージ表示）をしたい場合
           // ここに処理を書く
           Navigator.push(
@@ -170,6 +161,28 @@ class _PushUpCounterScreenState extends State<PushUpCounterScreen> {
             MaterialPageRoute(builder: (context) => const ResultScreen()),
           );
         }
+  }
+
+  void _startListening() {
+    // proximity_sensorのStream<int>をboolに変換
+    _proximityStream = ProximitySensor.events.map(
+      (event) => event > 0,
+    ); // センサー値が0より大きければtrue
+    _proximityStream.listen((isNear) {
+      // センサーの状態変化を監視
+      if (isNear && !_isNear) {
+        // 近づいた瞬間のみカウントアップ（ステップ関数）
+        setState(() {
+          _pushUpCount++; // 腕立て回数を増やす
+        });
+        // if (_pushUpCount == 2) {
+        //   // 2回目で何か処理（例：メッセージ表示）をしたい場合
+        //   // ここに処理を書く
+        //   Navigator.push(
+        //     context,
+        //     MaterialPageRoute(builder: (context) => const ResultScreen()),
+        //   );
+        // }
       }
       _isNear = isNear; // 状態を更新（過去の状態として残しておく）
     });
@@ -190,19 +203,38 @@ class _PushUpCounterScreenState extends State<PushUpCounterScreen> {
               'Push-ups', // タイトル表示
               style: TextStyle(fontSize: 32, color: Colors.white), // 文字サイズと色
             ),
-            const SizedBox(height: 20), // 余白
-            Text(
+            const SizedBox(height: 20),
+            SizedBox(
+              width: 185,
+              child: Text(
               '$_pushUpCount', // 腕立て回数を表示
-              style: const TextStyle(
-                fontSize: 80,
-                color: Colors.green,
-              ), // 文字サイズと色
-            ),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: const Color(0xFFD5FF5F) /* メインテーマ */,
+                  fontSize: 128,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ), // 余白
             const SizedBox(height: 40), // 余白
-            const Text(
-              'スマホを地面に置いて、\n胸を近づけるとカウントされます！', // 説明文
-              style: TextStyle(fontSize: 18, color: Colors.white60), // 文字サイズと色
-              textAlign: TextAlign.center, // 中央揃え
+            SizedBox(
+              width: 304,
+              height: 69,
+              child: Text(
+                'スマホを地面に置いて、\n胸を近づけるとカウントされます',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white /* 文字 */,
+                  fontSize: 14,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: debugyou, 
+              child: Text('debug') 
             ),
           ],
         ),
@@ -224,32 +256,30 @@ class _ResultScreenState extends State<ResultScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       // 画面のレイアウトを定義
-      backgroundColor: Colors.black, // 背景色を黒に設定
+      backgroundColor: const Color(0xFFD5FF5F), // 背景色を黒に設定
       body: Center(
         // 中央に配置
         child: Column(
           // 縦方向にウィジェットを並べる
           mainAxisAlignment: MainAxisAlignment.center, // 中央揃え
           children: [
+            Icon(Icons.task_alt, size: 100, color: Colors.black,),
+            SizedBox(
+              height: 20,
+            ),// タイトル表示
             const Text(
-              'Result', // タイトル表示
-              style: TextStyle(fontSize: 32, color: Colors.orange), // 文字サイズと色
+              "Finish!", // タイトル表示
+              style: TextStyle(fontSize: 32, color: Colors.black), // 文字サイズと色
             ),
             const SizedBox(height: 20), // 余白
-            // Text(
-            //   '$_pushUpCount', // 腕立て回数を表示
-            //   style: const TextStyle(
-            //     fontSize: 80,
-            //     color: Colors.green,
-            //   ), // 文字サイズと色
-            // ),
-            //const SizedBox(height: 40), // 余白
-            // const Text(
-            //   'スマホを地面に置いて、\n胸を近づけるとカウントされます！', // 説明文
-            //   style: TextStyle(fontSize: 18, color: Colors.white60), // 文字サイズと色
-            //   textAlign: TextAlign.center, // 中央揃え
-            // ),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.black, // ボタンの背景色
+                padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20), // ボタンの内側の余白
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30), // ボタンの角を丸くする
+                ),
+              ),
               // ボタンウィジェット
               onPressed: () {
                 Navigator.pushAndRemoveUntil(
@@ -258,10 +288,8 @@ class _ResultScreenState extends State<ResultScreen> {
                   (Route<dynamic> route) => false,
                 );
               },
-              child: const Text(
-                'Main menu',
-                style: TextStyle(fontSize: 50.0, fontWeight: FontWeight.bold),
-              ), // ボタンのラベル
+              child: 
+              const Text('Back to Calendar',style: TextStyle(fontSize: 20.0,color: Colors.white),), // ボタンのラベル
             ),
           ],
         ),
